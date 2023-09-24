@@ -142,7 +142,7 @@ get '/new-contribute' => sub {
     print {$fh} DateTime->now->dmy('/') . "\n---\n\n";
     print {$fh} $contribute;
     close($fh);
-    $c->redirect_to('/');
+    $c->redirect_to('/#ed' . $ed);
 };
 
 get '/judge' => sub {
@@ -174,7 +174,7 @@ get '/judge' => sub {
     open(my $fho, "> $ed_badges");
     print {$fho} $badges;
     close($fho);
-    $c->redirect_to('/');
+    $c->redirect_to('/#ed' . $ed);
 };
 
 
@@ -200,7 +200,7 @@ __DATA__
     </div>
     <div class="container">
     [% FOREACH ed IN eds %]
-        <div class="well">
+        <div id="ed[% ed.id %]" class="well">
         <p>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse[% ed.id %]" aria-expanded="false" aria-controls="collapse[% ed.id %]">[% ed.title %]</button>
             [% FOREACH bdg IN ed.badges %]
