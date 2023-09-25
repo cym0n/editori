@@ -11,7 +11,7 @@ my $dir = 'db/';
 get '/' => sub {
     my $c = shift;
 
-    my $filter = $c->param("badge");
+    my $filter = $c->param("filter");
 
     
     opendir (my $dh, $dir) or die $!;
@@ -48,8 +48,22 @@ get '/' => sub {
         {
             my $b_string = <$bh>;
             chomp $b_string;
-            $ok = 1 if($filter && $b_string =~ /$filter/);
+            if($filter)
+            {
+                if($filter eq 'nice')
+                {
+                    $ok = ($b_string !~ /trash/ && $b_string !~ /thumb-down/)
+                }
+                else
+                {
+                    $ok = ($b_string =~ /$filter/) 
+                }
+            }
             @badges = split ',', $b_string;
+        }
+        else
+        {
+            $ok = 1 if $filter && $filter eq 'nice';
         }
         my $sendings_c =  "$dir" . $node . '/' . $node . '.sendings' ;
         my @sendings = ();
@@ -195,7 +209,8 @@ __DATA__
         <h1>Database editori</h1>
         <p>
             <a class="btn btn-outline-info" href="/"><span class="oi oi-globe" aria-hidden="true"></span></a>
-            <a class="btn btn-outline-info" href="/?badge=bell"><span class="oi oi-bell" aria-hidden="true"></span></a>
+            <a class="btn btn-outline-info" href="/?filter=bell"><span class="oi oi-bell" aria-hidden="true"></span></a>
+            <a class="btn btn-outline-info" href="/?filter=nice"><span class="oi oi-bolt" aria-hidden="true"></span></a>
         </p>
     </div>
     <div class="container">
